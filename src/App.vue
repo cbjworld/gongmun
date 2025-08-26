@@ -23,7 +23,7 @@
         <p class="muted">어린이집 점검표·회계집계·예산보고서 등 현장에서 곧바로 쓸 수 있는 HWP·엑셀 템플릿. 용산구 실무자가 직접 설계하고 검증한 실무형 포맷을 제공합니다.</p>
 
         <div class="cta">
-          <button class="btn btn-primary" @click="scrollTo('#pricing')">템플릿 보기·구매</button>
+          <button class="btn btn-primary" @click="scrollTo('#pricing')">템플릿 보기·다운로드</button>
           <button class="btn btn-ghost" @click="scrollTo('#sample')">무료 샘플 받기</button>
         </div>
 
@@ -72,7 +72,7 @@
           <div class="small muted">{{ t.desc }}</div>
           <div style="margin-top:8px"><span class="small">가격: {{ t.price }}</span></div>
           <div style="margin-top:10px;display:flex;gap:8px">
-            <button class="btn btn-primary" @click="buy(t)">구매</button>
+            <button class="btn btn-primary" @click="buy(t)">다운로드</button>
             <button class="btn btn-ghost" @click="preview(t)">미리보기</button>
           </div>
         </div>
@@ -164,16 +164,16 @@
 import { reactive, ref } from 'vue'
 
 const templates = reactive([
-  { id: 1, title: '어린이집 점검 체크리스트 (HWP)', desc: '문항별 자동합산, 점검결과 PDF 출력용', price: '₩9,900' },
-  { id: 2, title: '어린이집 회계집계표 (XLSX)', desc: '월별 수입·지출 자동 집계, 계정코드 매핑', price: '₩14,900' },
-  { id: 3, title: '예산보고서 표준서식 (HWP)', desc: '지자체 제출용 포맷/자동 목차 포함', price: '₩19,900' },
-  { id: 4, title: '사업 제안서 템플릿 (HWP)', desc: '프레임워크 + 작성 가이드 포함', price: '₩12,900' },
-  { id: 5, title: '통합점검 대시보드 (XLSX)', desc: '기관별 요약표 + 리스크 표시', price: '₩24,900' },
-  { id: 6, title: '근거자료 첨부 양식 (HWP)', desc: '증빙 첨부 가이드 포함', price: '₩5,900' },
-  { id: 7, title: '연간 사업계획표 (XLSX)', desc: '기간별 예산 배분 자동화', price: '₩16,900' },
-  { id: 8, title: '대체 인력 관리표 (XLSX)', desc: '근무표 자동생성 + 승인흐름 주석', price: '₩9,900' },
-  { id: 9, title: '보고서 표준 목차(한글 포맷)', desc: '지자체 공문 표준 스타일 포함', price: '₩4,900' },
-  { id: 10, title: '커스터마이징 의뢰 양식 (HWP + XLSX)', desc: '요청서 템플릿 + 체크리스트', price: '₩29,900' }
+  { id: 1, title: '어린이집 점검 체크리스트 (HWP)', desc: '문항별 자동합산, 점검결과 PDF 출력용', price: '무료' },
+  { id: 2, title: '어린이집 회계집계표 (XLSX)', desc: '월별 수입·지출 자동 집계, 계정코드 매핑', price: '무료' },
+  { id: 3, title: '예산보고서 표준서식 (HWP)', desc: '지자체 제출용 포맷/자동 목차 포함', price: '무료' },
+  { id: 4, title: '사업 제안서 템플릿 (HWP)', desc: '프레임워크 + 작성 가이드 포함', price: '무료' },
+  { id: 5, title: '통합점검 대시보드 (XLSX)', desc: '기관별 요약표 + 리스크 표시', price: '무료' },
+  { id: 6, title: '근거자료 첨부 양식 (HWP)', desc: '증빙 첨부 가이드 포함', price: '무료' },
+  { id: 7, title: '연간 사업계획표 (XLSX)', desc: '기간별 예산 배분 자동화', price: '무료' },
+  { id: 8, title: '대체 인력 관리표 (XLSX)', desc: '근무표 자동생성 + 승인흐름 주석', price: '무료' },
+  { id: 9, title: '보고서 표준 목차(한글 포맷)', desc: '지자체 공문 표준 스타일 포함', price: '무료' },
+  { id: 10, title: '커스터마이징 의뢰 양식 (HWP + XLSX)', desc: '요청서 템플릿 + 체크리스트', price: '무료' }
 ])
 
 const lead = reactive({ name: '', email: '' })
@@ -188,11 +188,20 @@ function applySample() {
   lead.email = ''
 }
 
+// buy() 함수 대체 (템플릿 다운로드 + 간단한 다운로드 로깅)
 function buy(t) {
-  // 결제 흐름 연동 전 데모 동작
-  alert(`${t.title} 구매 흐름 시작 — 결제 연동 전 데모 알림입니다.`)
-  // 실제: 결제 페이지로 리다이렉트하거나 PG 연동
+  // 직접 다운로드 트리거
+  const a = document.createElement('a')
+  a.href = t.downloadUrl
+  a.download = '' // 브라우저에 따라 파일명 유지
+  document.body.appendChild(a)
+  a.click()
+  a.remove()
+
+  // (선택) 다운로드 카운트 전송 — 백엔드가 있다면 로그 남기기
+  // fetch('/api/download', { method: 'POST', body: JSON.stringify({ templateId: t.id }) })
 }
+
 
 function preview(t) {
   modal.title = t.title
